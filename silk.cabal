@@ -1,0 +1,65 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: bcdb707f8094d1a390598c748826405410e9083a11694430001ede287c6572da
+
+name:           silk
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/sudo-rushil/silk#readme>
+homepage:       https://github.com/sudo-rushil/silk#readme
+bug-reports:    https://github.com/sudo-rushil/silk/issues
+author:         Rushil Mallarapu
+maintainer:     rushil.mallarapu@gmail.com
+copyright:      Rushil Mallarapu
+license:        MIT
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/sudo-rushil/silk
+
+library
+  exposed-modules:
+      Lib
+  other-modules:
+      Paths_silk
+  hs-source-dirs:
+      src
+  build-depends:
+      algebraic-graphs >=0.5
+    , base >=4.7 && <5
+  default-language: Haskell2010
+
+executable silk-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_silk
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      algebraic-graphs >=0.5
+    , base >=4.7 && <5
+    , silk
+  default-language: Haskell2010
+
+test-suite silk-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_silk
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      algebraic-graphs >=0.5
+    , base >=4.7 && <5
+    , silk
+  default-language: Haskell2010
