@@ -1,4 +1,4 @@
-module Lib (graph, findPaths, findPath) where
+module Lib (graph, findPaths, findPath, eulerian', tgraph, tedges) where
 
 import           Algebra.Graph (deBruijn, edgeList)
 import           Data.List
@@ -40,3 +40,22 @@ nextPaths (path, node, es) (x:xs) acc = nextPaths (path, node, es) xs acc'
           path' = path ++ [label]
           node' = if node == a then b else a
           (label, (a, b)) = x
+
+
+eulerian' :: Int -> [[Int]] -> [Int] -> [Int] -> [Int] -> [Int]
+eulerian' _ _ _ [] circuit = reverse circuit
+eulerian' v adj edge path@(p:ps) circuit
+    | edge !! v /= 0 = eulerian' (last (adj !! v)) (popAtIndex v adj) (subAtIndex v edge) (v:path) circuit
+    | otherwise = eulerian' p adj edge ps (v:circuit)
+
+subAtIndex :: Int -> [Int] -> [Int]
+subAtIndex v arr = map (\(i, x) -> if i == v then x - 1 else x) (zip [0..] arr)
+
+popAtIndex :: Int -> [[Int]] -> [[Int]]
+popAtIndex v adj = map (\(i, x) -> if i == v then init x else x) (zip [0..] adj)
+
+tgraph :: [[Int]]
+tgraph = [[1, 2, 3], [0, 2], [0, 1, 3, 3], [0, 2, 2]]
+
+tedges :: [Int]
+tedges = [3, 2, 4, 3]
