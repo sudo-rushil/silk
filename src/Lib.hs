@@ -1,4 +1,5 @@
-module Lib (graph, findPaths, findPath, eulerian', tgraph, tedges) where
+-- module Lib (graph, findPaths, findPath, eulerian', tgraph, tedges) where
+module Lib where
 
 import           Algebra.Graph (deBruijn, edgeList)
 import           Data.List
@@ -40,6 +41,10 @@ nextPaths (path, node, es) (x:xs) acc = nextPaths (path, node, es) xs acc'
           path' = path ++ [label]
           node' = if node == a then b else a
           (label, (a, b)) = x
+
+
+eulerian :: [[Int]] -> [Int]
+eulerian adj = eulerian' 0 adj (map length adj) [0] []
 
 
 eulerian' :: Int -> [[Int]] -> [Int] -> [Int] -> [Int] -> [Int]
