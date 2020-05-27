@@ -27,7 +27,7 @@ library:
   source-dirs: src
 
 executables:
-  silk-exe:
+  silk:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
