@@ -1,6 +1,10 @@
 module Main where
 
+import           Graph
 import           Lib
 
 main :: IO ()
-main = putStrLn "Hello"
+main = do
+    x <- getLine
+    let n = read x
+    putStrLn $ universalString n
