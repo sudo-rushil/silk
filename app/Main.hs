@@ -4,7 +4,8 @@ import           Graph
 import           Lib
 
 main :: IO ()
-main = do
-    x <- getLine
-    let n = read x
-    putStrLn $ universalString n
+-- main = do
+--     x <- getLine
+--     let n = read x
+main =
+    putStrLn $ universalString 2

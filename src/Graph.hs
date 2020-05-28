@@ -6,11 +6,16 @@ import           Data.List     (sort)
 import           Debug.Trace   (trace)
 
 
+validPath :: Int -> [[a]] -> Bool
+validPath bound x = isNull && maxLen <= bound
+    where
+        isNull = not (null x)
+        maxLen = maximum (map length x)
+
 consolidatePaths :: Eq a => Int -> [[a]] -> [[a]]
-consolidatePaths bound paths = concat $ takeWhile (\x -> not (null x) && (maximum $ map length x) <= bound) (iterate cp paths)
+consolidatePaths bound paths = concat $ takeWhile (validPath bound) (iterate cp paths)
     where
         cp = consolidatePaths' paths
-
 
 consolidatePaths' :: Eq a => [[a]] -> [[a]] -> [[a]]
 consolidatePaths' toPaths fromPaths = joinedPaths
