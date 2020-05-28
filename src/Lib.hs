@@ -4,6 +4,8 @@ module Lib where
 import           Algebra.Graph (deBruijn, edgeList)
 import           Data.List
 
+import qualified Graph
+
 type Node      = String
 type Edge      = (Char, (String, String))
 type Graph     = [Edge]
