@@ -10,29 +10,39 @@ import           Debug.Trace   (trace)
 
 -- ***** Path consolidation functions *****
 
-validPath :: Int -> [[a]] -> Bool
-validPath bound x = isNull && maxLen <= bound
-    where
-        isNull = not (null x)
-        maxLen = maximum (map length x)
-
 consolidatePaths :: (Ord a, Eq a) => Int -> [[a]] -> [[a]]
 consolidatePaths bound paths = concat $ takeWhile (validPath bound) (iterate cp paths)
     where
         cache = buildCache paths
         cp = consolidatePaths' cache
 
-consolidatePaths' :: (Ord a, Eq a) => M.Map a [a] -> [[a]] -> [[a]]
-consolidatePaths' cache toPaths = joinedPaths
+validPath :: Int -> [[a]] -> Bool
+validPath bound x = isNull && maxLen <= bound
     where
-        joinedPaths = catMaybes $ map (consolidatePath' cache) toPaths
+        isNull = not (null x)
+        maxLen = maximum (map length x)
 
-consolidatePath' :: (Ord a, Eq a) => M.Map a [a] -> [a] -> Maybe [a]
-consolidatePath' cache path@(p:_) = (\x -> x ++ path) <$> (M.lookup p cache)
+consolidatePaths' :: (Ord a, Eq a) => M.Map a [a] -> [[a]] -> [[a]]
+consolidatePaths' cache toPaths = filter (not.null) joinedPaths
+    where
+        joinedPaths = concat $ map (consolidatePath' cache) toPaths
+
+consolidatePath' :: (Ord a, Eq a) => M.Map a [a] -> [a] -> [[a]]
+consolidatePath' cache path@(p:_) =
+    case (M.lookup p cache) of
+        Just x  -> map (\y -> y:path) x
+        Nothing -> [[]]
 
 buildCache :: (Ord a, Eq a) => [[a]] -> M.Map a [a]
-buildCache fromPaths =
-    M.fromList $ map (\x -> case (reverse x) of (x:xs) -> (x, reverse xs)) fromPaths
+buildCache fromPaths = foldr insertIntoCache M.empty fromPaths
+
+insertIntoCache :: (Ord a, Eq a) => [a] -> M.Map a [a] -> M.Map a [a]
+insertIntoCache path cache =
+    case reverse path of
+        (x:xs) ->
+            case M.lookup x cache of
+                Just ys -> M.insert x (ys ++ reverse xs) cache
+                Nothing -> M.insert x (reverse xs) cache
 
 
 -- ***** Eulerian Cycle Detection Functions *****
@@ -64,3 +74,5 @@ eulerianPath graph = result
 -- | Assemble universal string from eulerian path
 assemblePath :: [String] -> String
 assemblePath (p:ps) = foldr (\x acc -> acc ++ [last x]) p (reverse ps)
+
+-- Stop using paths with repeated edges
