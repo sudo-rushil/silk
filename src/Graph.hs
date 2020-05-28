@@ -8,6 +8,8 @@ import           Data.Maybe    (catMaybes)
 import           Debug.Trace   (trace)
 
 
+-- ***** Path consolidation functions *****
+
 validPath :: Int -> [[a]] -> Bool
 validPath bound x = isNull && maxLen <= bound
     where
@@ -32,6 +34,9 @@ buildCache :: (Ord a, Eq a) => [[a]] -> M.Map a [a]
 buildCache fromPaths =
     M.fromList $ map (\x -> case (reverse x) of (x:xs) -> (x, reverse xs)) fromPaths
 
+
+-- ***** Eulerian Cycle Detection Functions *****
+
 isCycle :: Eq a => [a] -> Bool
 isCycle path@(p:_) = p == last path
 
@@ -45,8 +50,6 @@ pairs :: Ord a => [a] -> [(a, a)]
 pairs []       = []
 pairs x@(_:xs) = sort $ zip x xs
 
-g = deBruijn 2 "01"
-
 -- | Generate all eulerian paths over a graph
 eulerianPath :: (Eq a, Ord a) => Graph a -> [[a]]
 eulerianPath graph = result
@@ -57,6 +60,7 @@ eulerianPath graph = result
         valid = cyclesOf len paths
         result = (filter (\x -> pairs x == edges) valid)
 
+-- ***** Universal String Functions *****
 -- | Assemble universal string from eulerian path
 assemblePath :: [String] -> String
 assemblePath (p:ps) = foldr (\x acc -> acc ++ [last x]) p (reverse ps)
