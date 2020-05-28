@@ -6,6 +6,8 @@ import           Data.List     (sort)
 import           Debug.Trace   (trace)
 
 
+-- ***** Path consolidation functions *****
+
 validPath :: Int -> [[a]] -> Bool
 validPath bound x = isNull && maxLen <= bound
     where
@@ -24,6 +26,9 @@ consolidatePaths' toPaths fromPaths = joinedPaths
             (p2h:p2) <- toPaths
             guard (last p1 == p2h)
             return (p1 ++ p2)
+
+
+-- ***** Eulerian Cycle Detection Functions *****
 
 isCycle :: Eq a => [a] -> Bool
 isCycle path@(p:_) = p == last path
