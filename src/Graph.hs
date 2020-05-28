@@ -2,20 +2,8 @@ module Graph where
 
 import           Algebra.Graph
 import           Control.Monad
-import           Data.List
+import           Data.List     (sort)
 import           Debug.Trace   (trace)
-
-
-overlayPaths :: Show a => [[a]] -> [[a]] -> [[a]]
-overlayPaths = (++)
-
-
-connectPaths :: (Eq a, Show a) => [[a]] -> [[a]] -> [[a]]
-connectPaths path1 path2 = connected
-    where connected = do
-            p1 <- path1
-            p2 <- path2
-            return (p1 ++ p2)
 
 
 consolidatePaths :: Eq a => Int -> [[a]] -> [[a]]
@@ -32,12 +20,26 @@ consolidatePaths' toPaths fromPaths = joinedPaths
             guard (last p1 == p2h)
             return (p1 ++ p2)
 
-
--- | Generate path from a graph.
--- Needs more work... doesn't yet handle self-adjacency
-path :: (Eq a, Show a) => Graph a -> [[a]]
--- path graph = foldg [[]] (\x -> trace ("Vertex: " ++ show [[x]]) [[x]]) overlayPaths connectPaths graph
-path = foldg [[]] (pure.pure) overlayPaths connectPaths
-
 isCycle :: Eq a => [a] -> Bool
 isCycle path@(p:_) = p == last path
+
+isLength :: Int -> [a] -> Bool
+isLength x path = x == length path
+
+cyclesOf :: Eq a => Int -> [[a]] -> [[a]]
+cyclesOf len paths = filter (\x -> isCycle x && isLength len x) paths
+
+pairs :: Ord a => [a] -> [(a, a)]
+pairs [] = []
+pairs xs = sort $ zip xs (tail xs)
+
+g = deBruijn 2 "01"
+
+eulerianPath :: (Eq a, Ord a) => Graph a -> [[a]]
+eulerianPath graph = result
+    where
+        edges = edgeList graph
+        len = length edges + 1
+        paths = consolidatePaths len (map (\(a, b) -> [a, b]) edges)
+        valid = cyclesOf len paths
+        result = (filter (\x -> pairs x == edges) valid)
