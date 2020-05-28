@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7e696810fca4de2392bd3a24e19b60dc7f82bb0b9a5f78a5b7b962a32f8c009a
+-- hash: 74fb29961c2bef4927a1975e614e45a8d256b87bbd78af1a20735cab3d0382e0
 
 name:           silk
 version:        0.1.0.0
@@ -36,6 +36,7 @@ library
   build-depends:
       algebraic-graphs >=0.5
     , base >=4.7 && <5
+    , containers
   default-language: Haskell2010
 
 executable silk
@@ -48,6 +49,7 @@ executable silk
   build-depends:
       algebraic-graphs >=0.5
     , base >=4.7 && <5
+    , containers
     , silk
   default-language: Haskell2010
 
@@ -62,5 +64,6 @@ test-suite silk-test
   build-depends:
       algebraic-graphs >=0.5
     , base >=4.7 && <5
+    , containers
     , silk
   default-language: Haskell2010

@@ -3,7 +3,8 @@ module Graph where
 import           Algebra.Graph
 import           Control.Monad
 import           Data.List     (sort)
--- import qualified Data.Map      as M
+import qualified Data.Map      as M
+import           Data.Maybe    (catMaybes)
 import           Debug.Trace   (trace)
 
 
@@ -13,21 +14,23 @@ validPath bound x = isNull && maxLen <= bound
         isNull = not (null x)
         maxLen = maximum (map length x)
 
-consolidatePaths :: Eq a => Int -> [[a]] -> [[a]]
+consolidatePaths :: (Ord a, Eq a) => Int -> [[a]] -> [[a]]
 consolidatePaths bound paths = concat $ takeWhile (validPath bound) (iterate cp paths)
     where
-        cp = consolidatePaths' paths
+        cache = buildCache paths
+        cp = consolidatePaths' cache
 
-consolidatePaths' :: Eq a => [[a]] -> [[a]] -> [[a]]
-consolidatePaths' toPaths fromPaths = joinedPaths
-    where joinedPaths = do
-            p1 <- fromPaths
-            (p2h:p2) <- toPaths
-            guard (last p1 == p2h)
-            return (p1 ++ p2)
+consolidatePaths' :: (Ord a, Eq a) => M.Map a [a] -> [[a]] -> [[a]]
+consolidatePaths' cache toPaths = joinedPaths
+    where
+        joinedPaths = catMaybes $ map (consolidatePath' cache) toPaths
 
--- buildCache :: Eq a => [[a]] -> M.Map a [a]
--- buildCache from
+consolidatePath' :: (Ord a, Eq a) => M.Map a [a] -> [a] -> Maybe [a]
+consolidatePath' cache path@(p:_) = (\x -> x ++ path) <$> (M.lookup p cache)
+
+buildCache :: (Ord a, Eq a) => [[a]] -> M.Map a [a]
+buildCache fromPaths =
+    M.fromList $ map (\x -> case (reverse x) of (x:xs) -> (x, reverse xs)) fromPaths
 
 isCycle :: Eq a => [a] -> Bool
 isCycle path@(p:_) = p == last path
