@@ -3,6 +3,7 @@ module Graph where
 import           Algebra.Graph
 import           Control.Monad
 import           Data.List     (sort)
+-- import qualified Data.Map      as M
 import           Debug.Trace   (trace)
 
 
@@ -25,6 +26,9 @@ consolidatePaths' toPaths fromPaths = joinedPaths
             guard (last p1 == p2h)
             return (p1 ++ p2)
 
+-- buildCache :: Eq a => [[a]] -> M.Map a [a]
+-- buildCache from
+
 isCycle :: Eq a => [a] -> Bool
 isCycle path@(p:_) = p == last path
 
@@ -35,8 +39,8 @@ cyclesOf :: Eq a => Int -> [[a]] -> [[a]]
 cyclesOf len paths = filter (\x -> isCycle x && isLength len x) paths
 
 pairs :: Ord a => [a] -> [(a, a)]
-pairs [] = []
-pairs xs = sort $ zip xs (tail xs)
+pairs []       = []
+pairs x@(_:xs) = sort $ zip x xs
 
 g = deBruijn 2 "01"
 
