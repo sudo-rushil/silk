@@ -43,8 +43,6 @@ pairs :: Ord a => [a] -> [(a, a)]
 pairs [] = []
 pairs xs = sort $ zip xs (tail xs)
 
-g = deBruijn 2 "01"
-
 -- | Generate all eulerian paths over a graph
 eulerianPath :: (Eq a, Ord a) => Graph a -> [[a]]
 eulerianPath graph = result
@@ -55,6 +53,7 @@ eulerianPath graph = result
         valid = cyclesOf len paths
         result = (filter (\x -> pairs x == edges) valid)
 
+-- ***** Universal String Functions *****
 -- | Assemble universal string from eulerian path
 assemblePath :: [String] -> String
 assemblePath (p:ps) = foldr (\x acc -> acc ++ [last x]) p (reverse ps)
