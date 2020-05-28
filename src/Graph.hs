@@ -35,6 +35,7 @@ pairs xs = sort $ zip xs (tail xs)
 
 g = deBruijn 2 "01"
 
+-- | Generate all eulerian paths over a graph
 eulerianPath :: (Eq a, Ord a) => Graph a -> [[a]]
 eulerianPath graph = result
     where
@@ -43,3 +44,7 @@ eulerianPath graph = result
         paths = consolidatePaths len (map (\(a, b) -> [a, b]) edges)
         valid = cyclesOf len paths
         result = (filter (\x -> pairs x == edges) valid)
+
+-- | Assemble universal string from eulerian path
+assemblePath :: [String] -> String
+assemblePath (p:ps) = foldr (\x acc -> acc ++ [last x]) p (reverse ps)
