@@ -2,7 +2,7 @@ module Graph where
 
 import           Algebra.Graph
 import           Control.Monad
-import           Data.List     (sort)
+import           Data.List     (intersect, isSubsequenceOf, sort)
 import qualified Data.Map      as M
 import           Data.Maybe    (catMaybes)
 import           Debug.Trace   (trace)
@@ -10,20 +10,27 @@ import           Debug.Trace   (trace)
 
 -- ***** Path consolidation functions *****
 
-consolidatePaths :: (Ord a, Eq a) => Int -> [[a]] -> [[a]]
-consolidatePaths bound paths = concat $ takeWhile (validPath bound) (iterate cp paths)
+consolidatePaths :: (Ord a, Eq a) => [(a, a)] -> Int -> [[a]] -> [[a]]
+consolidatePaths edges bound paths = concat $ takeWhile (validPath bound) (iterate cp paths)
     where
         cache = buildCache paths
-        cp = consolidatePaths' cache
+        cp = consolidatePaths' edges cache
 
 validPath :: Int -> [[a]] -> Bool
-validPath bound x = isNull && maxLen <= bound
+validPath bound path = isNull && maxLen <= bound
     where
-        isNull = not (null x)
-        maxLen = maximum (map length x)
+        isNull = not (null path)
+        maxLen = maximum (map length path)
 
-consolidatePaths' :: (Ord a, Eq a) => M.Map a [a] -> [[a]] -> [[a]]
-consolidatePaths' cache toPaths = filter (not.null) joinedPaths
+-- | Return false if path uses an edge twice.
+repeatedEdges :: (Ord a, Eq a) => [(a, a)] -> [a] -> Bool
+repeatedEdges edges path = isSubsequenceOf pathEdges sortedEdges
+    where
+        pathEdges = pairs path
+        sortedEdges = sort edges
+
+consolidatePaths' :: (Ord a, Eq a) => [(a, a)] -> M.Map a [a] -> [[a]] -> [[a]]
+consolidatePaths' edges cache toPaths = filter (\x -> (not.null) x && repeatedEdges edges x) joinedPaths
     where
         joinedPaths = concat $ map (consolidatePath' cache) toPaths
 
@@ -66,7 +73,7 @@ eulerianPath graph = result
     where
         edges = edgeList graph
         len = length edges + 1
-        paths = consolidatePaths len (map (\(a, b) -> [a, b]) edges)
+        paths = consolidatePaths edges len (map (\(a, b) -> [a, b]) edges)
         valid = cyclesOf len paths
         result = (filter (\x -> pairs x == edges) valid)
 
@@ -74,5 +81,3 @@ eulerianPath graph = result
 -- | Assemble universal string from eulerian path
 assemblePath :: [String] -> String
 assemblePath (p:ps) = foldr (\x acc -> acc ++ [last x]) p (reverse ps)
-
--- Stop using paths with repeated edges
