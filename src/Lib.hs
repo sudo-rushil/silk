@@ -1,4 +1,3 @@
--- module Lib (graph, findPaths, findPath, eulerian', tgraph, tedges) where
 module Lib where
 
 import           Algebra.Graph (deBruijn, edgeList)

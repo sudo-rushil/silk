@@ -8,4 +8,4 @@ main :: IO ()
 --     x <- getLine
 --     let n = read x
 main =
-    putStrLn $ universalString 4
+    putStrLn $ universalString 3

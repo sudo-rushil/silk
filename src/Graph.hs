@@ -52,7 +52,7 @@ insertIntoCache path cache =
                 Nothing -> M.insert x (reverse xs) cache
 
 
--- ***** Eulerian Cycle Detection Functions *****
+-- ***** Eulerian Cycle Detection Functions *****e
 
 isCycle :: Eq a => [a] -> Bool
 isCycle path@(p:_) = p == last path
@@ -67,13 +67,25 @@ pairs :: Ord a => [a] -> [(a, a)]
 pairs []       = []
 pairs x@(_:xs) = sort $ zip x xs
 
+eulerianPaths :: (Ord a, Eq a) => [(a, a)] -> Int -> Graph a -> [[a]]
+eulerianPaths edges len graph = foldg [[]] (pure.pure) (overlayPaths cp) (connectPaths cp) graph
+    where
+        cp = consolidatePaths edges len
+
+overlayPaths :: ([[a]] -> [[a]]) -> [[a]] -> [[a]] -> [[a]]
+overlayPaths consolidate paths1 paths2 = consolidate (paths1 ++ paths2)
+
+connectPaths :: ([[a]] -> [[a]]) -> [[a]] -> [[a]] -> [[a]]
+connectPaths consolidate paths1 paths2 = consolidate [ p1++p2 | p1 <- paths1, p2 <- paths2 ]
+
 -- | Generate all eulerian paths over a graph
 eulerianPath :: (Eq a, Ord a) => Graph a -> [[a]]
 eulerianPath graph = result
     where
         edges = edgeList graph
         len = length edges + 1
-        paths = consolidatePaths edges len (map (\(a, b) -> [a, b]) edges)
+        -- paths = consolidatePaths edges len (map (\(a, b) -> [a, b]) edges)
+        paths = eulerianPaths edges len graph
         valid = cyclesOf len paths
         result = (filter (\x -> pairs x == edges) valid)
 
