@@ -1,11 +1,14 @@
 module Main where
 
+import           Algebra.Graph (deBruijn)
 import           Graph
-import           Lib
+
+
+
+universalString :: Int -> String
+universalString x = assemblePath $ head (eulerianPath $ deBruijn x "01")
+
 
 main :: IO ()
--- main = do
---     x <- getLine
---     let n = read x
 main =
     putStrLn $ universalString 3

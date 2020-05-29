@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 441ad147ce98db86bf37e1eb5114f47d21ba3f6ddffc2bf583bfbf53df1f71be
+-- hash: 7f4792d5ccb588f36d46b7e19baad8c2f7413ee8d74dd84d34e54eca9dfe5a29
 
 name:           silk
 version:        0.1.0.0
@@ -28,7 +28,6 @@ source-repository head
 library
   exposed-modules:
       Graph
-      Lib
   other-modules:
       Paths_silk
   hs-source-dirs:
