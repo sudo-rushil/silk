@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7f4792d5ccb588f36d46b7e19baad8c2f7413ee8d74dd84d34e54eca9dfe5a29
+-- hash: fdbba464b5984c9282f074f25cfbb07ade0d1b2e25d1e2366194c05a93e91e3a
 
 name:           silk
 version:        0.1.0.0
@@ -19,7 +19,6 @@ license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
     README.md
-    ChangeLog.md
 
 source-repository head
   type: git
