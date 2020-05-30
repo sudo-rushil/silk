@@ -1,20 +1,33 @@
 module Genome where
 
 import           Algebra.Graph
-import           Graph         (assemblePath, eulerianPath)
+import           Graph         (eulerianPathFromEdges)
 
 
-assembleGraph :: [String] -> Graph String
-assembleGraph = edges . (map (\str -> (init str, tail str)))
+assembleGraph :: [String] -> [(String, String)]
+assembleGraph = map (\str -> (init str, tail str))
+
 
 silkAssemble :: [String] -> String
-silkAssemble strs = circularize . assemblePath $ head (eulerianPath graph)
+silkAssemble strs = circularize . assemblePath $ head (eulerianPathFromEdges graph)
     where graph = assembleGraph strs
+
 
 circularize :: String -> String
 circularize assembly = take len assembly
     where
-        isSame count (s:str) (r:revstr)
-            | s == r = isSame (count + 1) str revstr
-            | otherwise = count
-        len = length assembly - isSame 0 assembly (reverse assembly)
+        totalLen = length assembly
+        isSame count str revstr
+            | count > totalLen = totalLen
+            | isCircular count str revstr = count
+            | otherwise = isSame (count + 1) str revstr
+        len = totalLen - isSame 1 assembly (reverse assembly)
+
+
+isCircular :: Int -> String -> String -> Bool
+isCircular len str revstr = back revstr == (take len str)
+    where back = reverse . (take len)
+
+
+assemblePath :: [String] -> String
+assemblePath (p:ps) = foldr (\x acc -> acc ++ [last x]) p (reverse ps)

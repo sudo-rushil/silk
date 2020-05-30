@@ -94,7 +94,11 @@ eulerianPath graph = result
         result = (filter (\x -> pairs x == edges) valid)
 
 
--- ***** Universal String Functions *****
--- | Assemble universal string from eulerian path
-assemblePath :: [String] -> String
-assemblePath (p:ps) = foldr (\x acc -> acc ++ [last x]) p (reverse ps)
+eulerianPathFromEdges :: (Eq a, Ord a) => [(a,a)] -> [[a]]
+eulerianPathFromEdges rawEdges = result
+    where
+        edges = sort rawEdges
+        len = length edges + 1
+        paths = consolidatePaths edges len (map (\(a, b) -> [a, b]) edges)
+        valid = cyclesOf len paths
+        result = (filter (\x -> pairs x == edges) valid)

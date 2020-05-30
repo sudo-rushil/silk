@@ -11,8 +11,8 @@ universalString x = assemblePath $ head (eulerianPath $ deBruijn x "01")
 
 
 main :: IO ()
--- main =
---     putStrLn $ universalString 3
 main = do
-    let assembly =  silkAssemble ["AAC","ACG","CGT","GTA","TAA"]
+    genome <- readFile "example.txt"
+    putStrLn genome
+    let assembly = silkAssemble (lines genome)
     putStrLn assembly
