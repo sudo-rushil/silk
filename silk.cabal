@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c00d158a0eb557a2041ee19aa5d8ad0c22c2b54d59b4ca27473255922747f106
+-- hash: cfc2ed751a9108338f4a10ab1f12626ca7fd68ea6d0c3cd6dfd8aca38490ca42
 
 name:           silk
 version:        0.1.0.0
@@ -26,6 +26,7 @@ source-repository head
 
 library
   exposed-modules:
+      Fasta
       Genome
       Graph
   other-modules:
@@ -34,7 +35,9 @@ library
       src
   build-depends:
       algebraic-graphs >=0.5
+    , attoparsec
     , base >=4.7 && <5
+    , bytestring
     , containers
   default-language: Haskell2010
 
@@ -47,7 +50,9 @@ executable silk
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       algebraic-graphs >=0.5
+    , attoparsec
     , base >=4.7 && <5
+    , bytestring
     , containers
     , silk
   default-language: Haskell2010
@@ -62,7 +67,9 @@ test-suite silk-test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       algebraic-graphs >=0.5
+    , attoparsec
     , base >=4.7 && <5
+    , bytestring
     , containers
     , hspec
     , silk
