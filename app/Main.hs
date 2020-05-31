@@ -1,9 +1,9 @@
 module Main where
 
 import           Algebra.Graph (deBruijn)
+import           Fasta
 import           Genome
 import           Graph
-
 
 
 universalString :: Int -> String

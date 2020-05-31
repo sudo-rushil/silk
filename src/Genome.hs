@@ -1,7 +1,6 @@
 module Genome where
 
-import           Algebra.Graph
-import           Graph         (eulerianPathFromEdges)
+import           Graph (eulerianPathFromEdges)
 
 
 assembleGraph :: [String] -> [(String, String)]

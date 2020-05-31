@@ -1,12 +1,9 @@
 module Graph where
 
 import           Algebra.Graph
-import           Control.Monad
-import           Data.List     (intersect, isSubsequenceOf, sort)
+import           Data.List     (isSubsequenceOf, sort)
 import qualified Data.Map      as M
-import           Data.Maybe    (catMaybes)
 import qualified Data.Set      as S
-import           Debug.Trace   (trace)
 
 -- Store paths in a set
 -- ***** Path consolidation functions *****
