@@ -1,6 +1,7 @@
 module Main where
 
 import           Algebra.Graph (deBruijn, edgeList)
+import           Genome
 import           Graph
 import           Test.Hspec
 
