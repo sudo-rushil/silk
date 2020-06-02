@@ -30,3 +30,11 @@ isCircular len str revstr = back revstr == (take len str)
 
 assemblePath :: [String] -> String
 assemblePath (p:ps) = foldr (\x acc -> acc ++ [last x]) p (reverse ps)
+
+
+makeKmers :: Int -> String -> [String]
+makeKmers k str = kmers' (str ++ str) []
+    where
+        kmers' str'@(_:remStr) acc
+            | length acc >= length str = acc
+            | otherwise = kmers' remStr (take k str' : acc)

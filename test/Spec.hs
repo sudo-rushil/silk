@@ -43,3 +43,8 @@ main = hspec $ do
             it "returned path is right length" $
                 case eulerianPath exampleGraph of
                     (p:_) -> (length p) == 1 + length (edgeList exampleGraph)
+
+    describe "Genome Assembly Functions" $ do
+        describe "makeKmers" $ do
+            it "3-mer Case" $
+                makeKmers 3 "ATGCCATGGG" == ["GAT","GGA","GGG","TGG","ATG","CAT","CCA","GCC","TGC","ATG"]
