@@ -1,6 +1,7 @@
 module Genome where
 
-import           Graph (eulerianPathFromEdges)
+import           Algebra.Graph (deBruijn)
+import           Graph         (eulerianPath, eulerianPathFromEdges)
 
 
 assembleGraph :: [String] -> [(String, String)]
@@ -38,3 +39,9 @@ makeKmers k str = kmers' (str ++ str) []
         kmers' str'@(_:remStr) acc
             | length acc >= length str = acc
             | otherwise = kmers' remStr (take k str' : acc)
+
+
+-- Depreciated
+
+universalString :: Int -> String
+universalString x = assemblePath $ head (eulerianPath $ deBruijn x "01")

@@ -3,23 +3,26 @@
 
 module Main where
 
-import           Algebra.Graph                    (deBruijn)
-import           Data.Attoparsec.ByteString.Char8
+import           Data.Attoparsec.ByteString.Char8 (parseOnly)
 import qualified Data.ByteString                  as B
-import           Fasta
-import           Genome
-import           Graph
+import           Fasta                            (Fasta, fastaParser,
+                                                   pullSequence)
+import           Genome                           (makeKmers, silkAssemble)
+import           System.Environment               (getArgs)
 
 
-universalString :: Int -> String
-universalString x = assemblePath $ head (eulerianPath $ deBruijn x "01")
-
-testParse :: IO ()
-testParse = B.readFile "example.fa" >>= print . parseOnly fastaParser
-
+-- First option: kmers
+-- Second option: filepath
 main :: IO ()
 main = do
-    genome <- readFile "example.txt"
-    putStrLn genome
-    let assembly = silkAssemble (lines genome)
-    putStrLn assembly
+    (k:fpath:_) <- getArgs
+    file <- B.readFile fpath
+    let fasta = getFasta file
+    let genome = makeKmers (read k) (pullSequence fasta)
+    putStrLn $ silkAssemble genome
+
+getFasta :: B.ByteString -> Fasta
+getFasta str =
+    case parseOnly fastaParser str of
+        (Left _)  -> error "parsing failed"
+        (Right f) -> f

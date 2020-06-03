@@ -17,8 +17,8 @@ type Header = [B.ByteString]
 type Sequence = B.ByteString
 
 data Record = Record
-    { headers  :: Header
-    , sequence :: Sequence
+    { recHeaders  :: Header
+    , recSequence :: Sequence
     }
     deriving Show
 
@@ -29,6 +29,7 @@ type Fasta = [Record]
 
 isLineEnd :: Char -> Bool
 isLineEnd c = c == '\r' || c == '\n'
+
 fastaParser :: Parser Fasta
 fastaParser = many $ recordParser
 
@@ -48,3 +49,9 @@ recordParser = do
     sequence <- sequenceParser
     endOfLine
     return $ Record header sequence
+
+
+-- Operations
+
+pullSequence :: Fasta -> String
+pullSequence = concat . (map (unpack . recSequence))
